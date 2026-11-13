@@ -1,0 +1,48 @@
+/* 1200×630. El aparato mide 798×475 (escala 0.95) y queda centrado:
+   x 201…999, y 77.5…552.5. Los textos y las líneas se alinean a esos bordes. */
+html, body { width: 1200px; height: 630px; overflow: hidden; }
+body { background: radial-gradient(75% 85% at 50% 42%, #f1efea 0%, var(--bg) 55%, var(--bg-2) 100%); }
+
+.og {
+  --x0: 201px;
+  --x1: 999px;
+  --y0: 77.5px;
+  --y1: 552.5px;
+  position: relative;
+  width: 1200px;
+  height: 630px;
+  overflow: hidden;
+}
+
+.og-line { position: absolute; background: rgba(40, 34, 25, 0.2); }
+.og-v { top: 0; bottom: 0; width: 1px; }
+.og-h { left: 0; right: 0; height: 1px; }
+.og-l { left: var(--x0); }
+.og-r { left: calc(var(--x1) - 1px); }
+.og-t { top: var(--y0); }
+.og-b { top: calc(var(--y1) - 1px); }
+
+/* caja que hace que Device escale a 0.95: ancho 798/0.86, alto 475 + 2×16 */
+.og-device {
+  position: absolute;
+  left: 136px;
+  top: 61.5px;
+  width: 928px;
+  height: 507px;
+  z-index: 2;
+}
+.og-device .device { box-shadow: 0 2px 0 #fff inset, 0 24px 40px -12px rgba(40, 30, 15, 0.32), 0 60px 90px -40px rgba(40, 30, 15, 0.4); }
+
+.og-label {
+  position: absolute;
+  margin: 0;
+  font: 600 15px var(--label-font);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink);
+  z-index: 3;
+}
+.og-top { left: var(--x0); bottom: calc(630px - var(--y0) + 16px); }
+.og-bottom { right: calc(1200px - var(--x1)); top: calc(var(--y1) + 16px); color: var(--ink-soft); }
+
+.og .grain { position: absolute; inset: 0; }

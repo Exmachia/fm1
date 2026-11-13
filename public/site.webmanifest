@@ -1,0 +1,13 @@
+{
+  "name": "FM-1 · learn to play it",
+  "short_name": "FM-1",
+  "description": "Learn to play the M-VAVE FM-1 in your browser.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#dedcd7",
+  "theme_color": "#dedcd7",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}
