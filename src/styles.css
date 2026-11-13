@@ -106,7 +106,7 @@ body {
 .views button:disabled { cursor: default; opacity: 0.5; }
 
 .device-area {
-  --panel: clamp(220px, 42%, 360px);
+  --panel: clamp(220px, 26%, 260px);
   grid-column: 2;
   grid-row: 2;
   min-height: 0;

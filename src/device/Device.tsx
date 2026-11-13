@@ -8,11 +8,11 @@ import { Halo } from './Halo'
 
 /** Qué fracción de la celda ocupa el aparato: aire alrededor en pantallas
  *  grandes, casi todo el ancho en el celular para que las teclas se puedan tocar. */
-const FILL_WIDE = 0.76
+const FILL_WIDE = 0.86
 const FILL_NARROW = 0.94
-const MAX_SCALE = 1
+const MAX_SCALE = 1.5
 /** Aire entre el aparato y el panel de abajo. */
-const GAP = 22
+const GAP = 16
 
 /**
  * El FM-1 completo. Se dibuja a 840×500 y se escala para caber (ancho y
