@@ -23,7 +23,7 @@ function geometry(id: string): { x: number; y: number; w: number; h: number; r: 
 /** Letra del teclado de la compu para cada tecla (ver audio/input.ts). */
 const LETTER: Record<number, string> = {
   7: 'A', 8: 'W', 9: 'S', 10: 'E', 11: 'D', 12: 'F', 13: 'T', 14: 'G', 15: 'Y', 16: 'H',
-  17: 'U', 18: 'J', 19: 'K', 20: 'O', 21: 'L', 22: 'P', 23: 'Ñ', 24: '´',
+  17: 'U', 18: 'J', 19: 'K', 20: 'O', 21: 'L', 22: 'P', 23: ';', 24: "'",
 }
 
 /** Aros que laten alrededor de los controles que el guía te pide usar. */

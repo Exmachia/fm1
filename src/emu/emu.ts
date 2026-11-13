@@ -96,7 +96,7 @@ async function fetchPackage(fw: Firmware): Promise<ArrayBuffer> {
     if (r?.ok) return r.arrayBuffer()
     status = r?.status ?? 0
   }
-  throw new Error(`No se pudo bajar ${fw.name}${status ? ` (${status})` : ''}`)
+  throw new Error(`Couldn’t download ${fw.name}${status ? ` (${status})` : ''}`)
 }
 
 async function ensureAudio() {
@@ -117,7 +117,7 @@ let bootTimer: ReturnType<typeof setTimeout> | undefined
 function explain(err: unknown) {
   const msg = err instanceof Error ? err.message : String(err)
   if (/failed to fetch|load failed|networkerror|unable to load|aborterror/i.test(msg) || (err instanceof DOMException && err.name === 'AbortError'))
-    return 'No se pudo descargar el emulador. Revisa tu conexión o recarga la página.'
+    return 'Couldn’t download the emulator. Check your connection or reload the page.'
   return msg
 }
 
@@ -141,7 +141,7 @@ function onMessage(e: MessageEvent) {
   } else if (m.type === 'error' && (m.fatal || useEmu.getState().status !== 'running')) {
     clearTimeout(bootTimer)
     console.error('[fm1-emu]', m.message)
-    useEmu.setState({ status: 'error', error: m.message ? `El emulador dijo: ${m.message}` : 'El firmware se detuvo' })
+    useEmu.setState({ status: 'error', error: m.message ? `The emulator said: ${m.message}` : 'The firmware stopped' })
   }
 }
 
@@ -170,7 +170,7 @@ export async function startFirmware(fw: Firmware) {
     bootTimer = setTimeout(() => {
       if (my !== seq || useEmu.getState().status !== 'booting') return
       send({ type: 'cancel-boot', seq: my })
-      useEmu.setState({ status: 'error', error: 'Tardó demasiado en arrancar. Inténtalo otra vez.' })
+      useEmu.setState({ status: 'error', error: 'It took too long to boot. Try again.' })
     }, BOOT_TIMEOUT)
   } catch (err) {
     if (my !== seq) return

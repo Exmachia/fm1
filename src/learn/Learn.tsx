@@ -30,8 +30,8 @@ interface Draft { title: string; tracks: MidiTrack[]; track: number; melody: boo
 /** El recorrido por las partes del aparato (antes era su propia pestaña). */
 const TOUR: Lesson = {
   id: 'intro',
-  title: 'Conoce el FM-1',
-  subtitle: 'Qué hace cada perilla, botón y tecla',
+  title: 'Meet the FM-1',
+  subtitle: 'What every knob, button and key does',
   steps: INTRO,
 }
 const TOUR_KEY = 'fm1.intro.step'
@@ -59,7 +59,7 @@ export function Learn({ onPlay }: { onPlay: () => void }) {
         key={lesson.id}
         steps={lesson.steps}
         storeKey={keyOf(lesson.id)}
-        finishLabel={lesson === TOUR ? 'Ir a Tocar' : 'Volver a lecciones'}
+        finishLabel={lesson === TOUR ? 'Go to Play' : 'Back to lessons'}
         onFinish={() => {
           write(keyOf(lesson.id), null)
           open(null)
@@ -75,12 +75,12 @@ export function Learn({ onPlay }: { onPlay: () => void }) {
     if (!f) return
     try {
       const tracks = parseMidi(await f.arrayBuffer())
-      if (!tracks.length) throw new Error('Ese archivo no tiene notas que tocar')
+      if (!tracks.length) throw new Error('That file has no notes to play')
       // por omisión, la pista con más notas
       const track = tracks.reduce((best, t, i) => (t.notes.length > tracks[best].notes.length ? i : best), 0)
       setDraft({ title: f.name.replace(/\.(mid|midi|kar)$/i, ''), tracks, track: tracks.length > 1 ? track : 0, melody: true })
     } catch (e) {
-      setError(e instanceof Error && e.message !== 'No es un archivo MIDI' ? e.message : 'Ese archivo no parece MIDI (.mid).')
+      setError(e instanceof Error && e.message !== 'Not a MIDI file' ? e.message : 'That doesn’t look like a MIDI file (.mid).')
     } finally {
       if (file.current) file.current.value = ''
     }
@@ -89,7 +89,7 @@ export function Learn({ onPlay }: { onPlay: () => void }) {
   const create = () => {
     if (!draft) return
     const notes = draft.track < 0 ? draft.tracks.flatMap((t) => t.notes) : draft.tracks[draft.track].notes
-    const song = songFromNotes(draft.title.trim() || 'Mi canción', notes, draft.melody)
+    const song = songFromNotes(draft.title.trim() || 'My song', notes, draft.melody)
     const next = [...songs, song]
     setSongs(next)
     saveSongs(next)
@@ -106,23 +106,23 @@ export function Learn({ onPlay }: { onPlay: () => void }) {
 
   const status = (l: Lesson) => {
     const n = Number(read(keyOf(l.id))) || 0
-    return n > 0 ? `Paso ${n + 1} de ${l.steps.length}` : `${l.steps.length} pasos`
+    return n > 0 ? `Step ${n + 1} of ${l.steps.length}` : `${l.steps.length} steps`
   }
 
   if (!draft) {
     return (
-      <section className="tiles" aria-label="¿Qué quieres hacer?">
-        <h2 className="tiles-title">¿Qué quieres hacer?</h2>
+      <section className="tiles" aria-label="What do you want to do?">
+        <h2 className="tiles-title">What do you want to do?</h2>
         <ul className="tiles-grid">
           {[TOUR, ...lessons].map((l) => (
             <li key={l.id}>
               <button type="button" className={`tile ${l === TOUR ? 'is-tour' : ''}`} onClick={() => open(l.id)}>
-                <span className="tile-kind">{l === TOUR ? 'Conocer' : 'Canción'}</span>
+                <span className="tile-kind">{l === TOUR ? 'Explore' : 'Song'}</span>
                 <b>{l.title}</b>
                 <small>{status(l)}</small>
               </button>
               {l !== TOUR && l.id !== APHEX.id && (
-                <button type="button" className="tile-remove" aria-label={`Quitar ${l.title}`} onClick={() => remove(l.id)}>
+                <button type="button" className="tile-remove" aria-label={`Remove ${l.title}`} onClick={() => remove(l.id)}>
                   <svg viewBox="0 0 20 20" width="12" height="12" aria-hidden="true">
                     <path d="M5 5l10 10M15 5L5 15" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
                   </svg>
@@ -133,8 +133,8 @@ export function Learn({ onPlay }: { onPlay: () => void }) {
           <li>
             <button type="button" className="tile is-add" onClick={() => file.current?.click()}>
               <span className="tile-kind">MIDI</span>
-              <b>+ Importar</b>
-              <small>{error ?? 'Tu propia canción'}</small>
+              <b>+ Import</b>
+              <small>{error ?? 'Your own song'}</small>
             </button>
             <input ref={file} type="file" accept=".mid,.midi,.kar,audio/midi,audio/x-midi" hidden onChange={(e) => onFile(e.target.files?.[0])} />
           </li>
@@ -146,40 +146,40 @@ export function Learn({ onPlay }: { onPlay: () => void }) {
   return (
     <aside className="coach picker">
       <div className="coach-body">
-        <h2 className="coach-title">Nueva lección</h2>
-        <p className="coach-text">Elige qué parte del archivo quieres aprender. Con "solo la melodía" tocas una nota a la vez.</p>
+        <h2 className="coach-title">New lesson</h2>
+        <p className="coach-text">Choose which part of the file you want to learn. With “melody only” you play one note at a time.</p>
       </div>
 
       {draft && (
         <div className="picker-form">
           <label>
-            <span>Nombre</span>
+            <span>Name</span>
             <input value={draft.title} maxLength={40} onChange={(e) => setDraft({ ...draft, title: e.target.value })} />
           </label>
           {draft.tracks.length > 1 && (
             <label>
-              <span>Pista</span>
+              <span>Track</span>
               <select value={draft.track} onChange={(e) => setDraft({ ...draft, track: Number(e.target.value) })}>
                 {draft.tracks.map((t, i) => (
                   <option key={i} value={i}>
-                    {t.name} · {t.notes.length} notas
+                    {t.name} · {t.notes.length} notes
                   </option>
                 ))}
-                <option value={-1}>Todas juntas</option>
+                <option value={-1}>All together</option>
               </select>
             </label>
           )}
           <label className="picker-check">
             <input type="checkbox" checked={draft.melody} onChange={(e) => setDraft({ ...draft, melody: e.target.checked })} />
-            <span>Solo la melodía (la nota más aguda)</span>
+            <span>Melody only (the highest note)</span>
           </label>
           <div className="coach-foot">
             <span className="coach-spacer" />
             <button type="button" className="coach-ghost" onClick={() => setDraft(null)}>
-              Cancelar
+              Cancel
             </button>
             <button type="button" className="coach-cta" onClick={create}>
-              Crear lección
+              Create lesson
             </button>
           </div>
         </div>

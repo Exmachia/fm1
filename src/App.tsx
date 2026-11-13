@@ -10,10 +10,10 @@ import { startFirmware, stopFirmware, useEmu } from './emu/emu'
 type View = 'learn' | 'play' | 'firmware'
 
 const MIDI_LABEL: Record<MidiStatus, string> = {
-  off: 'Conectar MIDI',
-  on: 'MIDI conectado',
-  unsupported: 'MIDI no disponible',
-  denied: 'MIDI bloqueado',
+  off: 'Connect MIDI',
+  on: 'MIDI connected',
+  unsupported: 'MIDI unavailable',
+  denied: 'MIDI blocked',
 }
 
 const VIEW_KEY = 'fm1.view'
@@ -27,8 +27,8 @@ const loadView = (): View => {
 }
 
 const TABS: [View, string][] = [
-  ['learn', 'Aprender'],
-  ['play', 'Tocar'],
+  ['learn', 'Learn'],
+  ['play', 'Play'],
   ['firmware', 'Firmwares'],
 ]
 
@@ -71,7 +71,7 @@ export function App() {
             {MIDI_LABEL[midi]}
           </button>
         </div>
-        <nav className="views" aria-label="Vistas">
+        <nav className="views" aria-label="Views">
           {TABS.map(([id, label]) => (
             <button key={id} type="button" className={view === id ? 'is-active' : ''} onClick={() => setView(id)}>
               {label}
@@ -98,7 +98,7 @@ export function App() {
           {view === 'play' && (emu ? <FirmwareBar /> : <ExportBar />)}
           {view === 'play' && (
             <p className="hint">
-              Teclado: <kbd>A</kbd>–<kbd>Ñ</kbd> blancas · <kbd>W</kbd> <kbd>E</kbd> <kbd>T</kbd>… negras · <kbd>Z</kbd> <kbd>X</kbd> octava
+              Keyboard: <kbd>A</kbd>–<kbd>;</kbd> white · <kbd>W</kbd> <kbd>E</kbd> <kbd>T</kbd>… black · <kbd>Z</kbd> <kbd>X</kbd> octave
             </p>
           )}
         </section>

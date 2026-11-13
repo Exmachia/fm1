@@ -1,6 +1,6 @@
 import { startFirmware, stopFirmware, useEmu } from '../emu/emu'
 
-const LABEL = { off: '', loading: 'Descargando…', booting: 'Arrancando…', running: 'Corriendo', error: 'No arrancó' }
+const LABEL = { off: '', loading: 'Downloading…', booting: 'Booting…', running: 'Running', error: 'Failed to boot' }
 
 /** Abajo a la derecha, en Tocar: qué firmware de la comunidad corre y cómo volver al de fábrica. */
 export function FirmwareBar() {
@@ -18,11 +18,11 @@ export function FirmwareBar() {
       </span>
       {status === 'error' && (
         <button type="button" className="export-btn" onClick={() => void startFirmware(fw)}>
-          Reintentar
+          Retry
         </button>
       )}
       <button type="button" className="export-btn" onClick={stopFirmware}>
-        Volver al FM-1
+        Back to FM-1
       </button>
     </div>
   )

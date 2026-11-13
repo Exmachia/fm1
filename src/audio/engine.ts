@@ -97,7 +97,7 @@ let chunks: { l: Float32Array[]; r: Float32Array[] } = { l: [], r: [] }
 
 export async function startRecording() {
   await startAudio()
-  if (!recorder) throw new Error('El audio no arrancó')
+  if (!recorder) throw new Error('Audio didn’t start')
   chunks = { l: [], r: [] }
   recorder.port.onmessage = (e: MessageEvent<{ l: Float32Array[]; r: Float32Array[]; done: boolean }>) => {
     chunks.l.push(...e.data.l)

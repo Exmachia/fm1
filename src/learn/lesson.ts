@@ -49,7 +49,7 @@ export const keysFor = (s: FM1State, notes: number[]): Target => {
   return oct ?? ids
 }
 
-const SOLFEO = ['Do', 'Do#', 'Re', 'Re#', 'Mi', 'Fa', 'Fa#', 'Sol', 'Sol#', 'La', 'La#', 'Si']
+const SOLFEO = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 export const solfeo = (note: number) => SOLFEO[((note % 12) + 12) % 12]
 
 /** Grupos parejos a partir de una lista de notas sueltas. */

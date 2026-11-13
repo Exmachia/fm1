@@ -3,7 +3,7 @@ import { onPlayed, useFM1, type FM1State } from '../fm1/store'
 import { useCoach } from './coachStore'
 import { evenDemo, keysFor, playDemo, type Step, type Target } from './lesson'
 
-const PRAISE = ['¡Eso!', '¡Bien!', '¡Perfecto!', '¡Así se hace!', '¡Muy bien!']
+const PRAISE = ['Yes!', 'Nice!', 'Perfect!', 'That’s it!', 'Great!']
 
 const loadStep = (key: string, max: number) => {
   try {
@@ -143,7 +143,7 @@ export function Coach({ steps, storeKey, onFinish, finishLabel, onExit }: Props)
         <div className="coach-head">
           <h2 className="coach-title">{step.title}</h2>
           {onExit && (
-            <button type="button" className="coach-exit" onClick={onExit} aria-label="Salir a las lecciones">
+            <button type="button" className="coach-exit" onClick={onExit} aria-label="Back to lessons">
               <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
                 <path d="M5 5l10 10M15 5L5 15" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
               </svg>
@@ -152,7 +152,7 @@ export function Coach({ steps, storeKey, onFinish, finishLabel, onExit }: Props)
         </div>
         <p className="coach-text">{step.body}</p>
         {follow && (
-          <div className="coach-notes" aria-label={`${progress} de ${follow.length} notas`}>
+          <div className="coach-notes" aria-label={`${progress} of ${follow.length} notes`}>
             {showDots ? (
               follow.map((_, i) => (
                 <span key={i} className={i < progress ? 'is-hit' : i === progress && !done ? 'is-next' : ''} />
@@ -169,7 +169,7 @@ export function Coach({ steps, storeKey, onFinish, finishLabel, onExit }: Props)
         {needsAction && !done && (
           <span className="coach-task">
             <span className="coach-pulse" />
-            {miss ? 'Esa no. Busca la tecla azul' : step.task ?? 'Toca las teclas azules'}
+            {miss ? 'Not that one. Find the blue key' : step.task ?? 'Play the blue keys'}
           </span>
         )}
         {done && (
@@ -186,21 +186,21 @@ export function Coach({ steps, storeKey, onFinish, finishLabel, onExit }: Props)
             <svg viewBox="0 0 20 20" width="15" height="15" aria-hidden="true">
               {listening ? <rect x="5" y="5" width="10" height="10" rx="1.5" fill="currentColor" /> : <path d="M6 4.5v11l9-5.5z" fill="currentColor" />}
             </svg>
-            {listening ? 'Detener' : 'Escuchar'}
+            {listening ? 'Stop' : 'Listen'}
           </button>
         )}
         {index > 0 && (
           <button type="button" className="coach-ghost" onClick={() => setIndex(index - 1)}>
-            Atrás
+            Back
           </button>
         )}
         {needsAction && !done && (
           <button type="button" className="coach-ghost" onClick={next}>
-            Saltar
+            Skip
           </button>
         )}
         <button type="button" className="coach-cta" disabled={!canContinue} onClick={next}>
-          {index === 0 ? 'Empezar' : last ? finishLabel : 'Continuar'}
+          {index === 0 ? 'Start' : last ? finishLabel : 'Continue'}
         </button>
       </div>
     </aside>

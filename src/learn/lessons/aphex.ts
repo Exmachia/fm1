@@ -47,32 +47,32 @@ const recorded = (s: FM1State) => ARP.every((n, i) => pattern(s)[i].includes(n))
 
 export const APHEX: Lesson = {
   id: 'nieve-tibia',
-  title: 'Nieve tibia',
-  subtitle: 'Al estilo Aphex Twin · piano FM, arpegio lento y melodía',
+  title: 'Warm Snow',
+  subtitle: 'Aphex Twin style · FM piano, slow arpeggio and melody',
   steps: [
     {
-      title: 'Al estilo Aphex Twin',
-      body: '«Nieve tibia» es una pieza original con su técnica: un piano FM triste, un arpegio lento que se repite solo y una melodía suelta encima. Escúchala primero.',
+      title: 'In the style of Aphex Twin',
+      body: '“Warm Snow” is an original piece using his techniques: a sad FM piano, a slow arpeggio that loops on its own and a loose melody on top. Listen first.',
       demo: FULL_DEMO,
     },
     {
-      title: 'El sonido',
-      body: 'En sus discos ambient usaba mucho pianos eléctricos FM, como los del DX7. El FM-1 trae uno: E.PIANO 1, el preset 005.',
-      task: 'Gira PRESETS hasta 005 E.PIANO 1',
+      title: 'The sound',
+      body: 'His ambient records lean on FM electric pianos, like the DX7’s. The FM-1 has one: E.PIANO 1, preset 005.',
+      task: 'Turn PRESETS to 005 E.PIANO 1',
       target: 'presets',
       check: (s) => s.presetIndex === 4,
     },
     {
-      title: 'Que respire',
-      body: 'Con un Release largo, cada nota se apaga despacio en lugar de cortarse. Es la mitad de la melancolía.',
-      task: 'Entra a ENV y sube Release (KNOB4) a 5 o más',
+      title: 'Let it breathe',
+      body: 'With a long Release, each note fades slowly instead of stopping short. That’s half the melancholy.',
+      task: 'Open ENV and raise Release (KNOB4) to 5 or more',
       target: (s) => (s.mode !== 'env' ? 'env' : 'knob4'),
       check: (s, a) => s.mode === 'env' && s.patch.env.r >= Math.min(8, Math.max(5, a.patch.env.r + 1)),
     },
     {
-      title: 'Mucho espacio',
-      body: 'La reverb hace que el piano suene en un cuarto grande y vacío. Súbele el Mix para que se oiga lejos.',
-      task: 'En FX, elige Reverb con SELECT y sube Mix (KNOB3) a 60 %',
+      title: 'Lots of space',
+      body: 'Reverb puts the piano in a big, empty room. Turn up the Mix so it sounds far away.',
+      task: 'In FX, pick Reverb with SELECT and raise Mix (KNOB3) to 60%',
       target: (s) => {
         if (s.mode !== 'fx') return 'fx'
         if (s.patch.fx.order[s.fxSelected] !== 'reverb') return 'select'
@@ -82,37 +82,37 @@ export const APHEX: Lesson = {
       check: (s) => s.patch.fx.units.reverb.on && s.patch.fx.units.reverb.p[1] >= 60,
     },
     {
-      title: 'Mano izquierda: Re menor',
-      body: 'El arpegio son 4 acordes de 4 notas, de grave a agudo. El primero es Re, La, Re, Fa. Tócalo dos veces.',
-      task: 'Toca las teclas azules',
+      title: 'Left hand: D minor',
+      body: 'The arpeggio is 4 chords of 4 notes, low to high. The first is D, A, D, F. Play it twice.',
+      task: 'Play the blue keys',
       follow: twice(DM),
       demo: evenDemo(twice(DM), 420),
     },
     {
-      title: 'Fa mayor',
-      body: 'El segundo acorde: Fa, La, Do, Fa. Fíjate que la segunda y la última nota no se mueven.',
-      task: 'Toca las teclas azules',
+      title: 'F major',
+      body: 'The second chord: F, A, C, F. Notice the second and last notes stay put.',
+      task: 'Play the blue keys',
       follow: twice(F),
       demo: evenDemo(twice(F), 420),
     },
     {
-      title: 'Do y La menor',
-      body: 'Los dos últimos: Do, Sol, Do, Mi y luego Mi, La, Do, Mi. Ese último regresa solo al Re menor.',
-      task: 'Toca las teclas azules',
+      title: 'C and A minor',
+      body: 'The last two: C, G, C, E and then E, A, C, E. That last one leads back to D minor.',
+      task: 'Play the blue keys',
       follow: singles([...C, ...AM_E]),
       demo: evenDemo(singles([...C, ...AM_E]), 420),
     },
     {
-      title: 'Los 16 juntos',
-      body: 'Ahora el arpegio entero, sin parar. No importa la velocidad: lo va a tocar el SEQ por ti.',
-      task: 'Toca las 16 notas',
+      title: 'All 16 together',
+      body: 'Now the whole arpeggio, without stopping. Speed doesn’t matter: the SEQ will play it for you.',
+      task: 'Play the 16 notes',
       follow: singles(ARP),
       demo: evenDemo(singles(ARP), STEP_MS),
     },
     {
-      title: 'Más lento',
-      body: 'En SEQ, Rate dice cada cuánto avanza un paso y Tempo qué tan rápido va todo. Para este estilo: corcheas y tempo bajo.',
-      task: 'Entra a SEQ: Rate en 1/8 (KNOB3) y Tempo en 100 o menos (KNOB4)',
+      title: 'Slower',
+      body: 'In SEQ, Rate sets how often it steps and Tempo how fast everything goes. For this style: eighth notes and a low tempo.',
+      task: 'Open SEQ: Rate to 1/8 (KNOB3) and Tempo to 100 or less (KNOB4)',
       target: (s) => {
         if (s.arp.on) return 'arp'
         if (!s.seq.on || s.mode !== 'seq') return 'seq'
@@ -123,9 +123,9 @@ export const APHEX: Lesson = {
       check: (s) => s.seq.on && s.seq.rate === 1 && s.tempo <= 100,
     },
     {
-      title: 'Grábalo',
-      body: 'Con REC, cada nota ocupa el siguiente paso. Suelta cada tecla antes de tocar la otra, o se juntan en un acorde. Si te equivocas, sigue: al llegar al 16 vuelve a empezar.',
-      task: 'Presiona REC y toca las 16 notas',
+      title: 'Record it',
+      body: 'With REC on, each note fills the next step. Release each key before the next one, or they merge into a chord. If you slip, keep going: after step 16 it starts over.',
+      task: 'Press REC and play the 16 notes',
       target: (s) => {
         if (!s.seq.on) return 'seq'
         if (!s.seq.recording) return recorded(s) ? null : 'rec'
@@ -134,29 +134,29 @@ export const APHEX: Lesson = {
       check: (s) => s.seq.on && recorded(s),
     },
     {
-      title: 'Que se repita solo',
-      body: 'Presiona REC otra vez para dejar de grabar. El arpegio sigue sonando en bucle; las teclas blancas muestran el paso.',
-      task: 'Presiona REC',
+      title: 'Let it loop',
+      body: 'Press REC again to stop recording. The arpeggio keeps looping; the white keys show the current step.',
+      task: 'Press REC',
       target: (s) => (s.seq.recording ? 'rec' : s.seq.on && !s.seq.playing ? 'play' : 'rec'),
       check: (s) => s.seq.on && s.seq.playing && !s.seq.recording,
     },
     {
-      title: 'Una octava arriba',
-      body: 'La melodía va más aguda. Sube una octava: lo que grabaste en el SEQ no cambia.',
-      task: 'Deja la octava en +1',
+      title: 'One octave up',
+      body: 'The melody sits higher. Go up an octave: what you recorded in the SEQ doesn’t change.',
+      task: 'Set the octave to +1',
       target: (s) => (s.octave < 1 ? 'octUp' : 'octDown'),
       check: (s) => s.octave === 1,
     },
     {
-      title: 'La melodía',
-      body: 'Toca la melodía encima del arpegio, sin prisa. No tiene que caer exacto: en estas piezas todo flota un poco suelto.',
-      task: 'Toca las teclas azules',
+      title: 'The melody',
+      body: 'Play the melody over the arpeggio, no rush. It doesn’t have to be exact: in these pieces everything floats a little loose.',
+      task: 'Play the blue keys',
       follow: singles(MELODY),
       demo: melodyDemo(0),
     },
     {
-      title: '¡Tocaste «Nieve tibia»!',
-      body: 'Prueba girar PRESETS mientras suena el arpegio: el patrón sigue y cambia el color. Si te gusta tu sonido, mantén SAVE para guardarlo.',
+      title: 'You played “Warm Snow”!',
+      body: 'Try turning PRESETS while the arpeggio plays: the pattern keeps going and the color changes. If you like your sound, hold SAVE to keep it.',
     },
   ],
 }

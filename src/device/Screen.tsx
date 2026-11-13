@@ -4,7 +4,7 @@ import { LCD, paintScreen } from './screen/paint'
 import { useFM1 } from '../fm1/store'
 import { readLcd, useEmu } from '../emu/emu'
 
-const STATUS: Record<string, string> = { loading: 'Descargando', booting: 'Arrancando', error: 'No arrancó' }
+const STATUS: Record<string, string> = { loading: 'Downloading', booting: 'Booting', error: 'Failed to boot' }
 
 /** Pinta la pantalla del firmware de la comunidad (RGB565) o su estado mientras carga. */
 function paintEmu(ctx: CanvasRenderingContext2D, off: { canvas: HTMLCanvasElement; img: ImageData; version: number }) {
@@ -71,7 +71,7 @@ export function Screen() {
         width={LCD * SUPERSAMPLE}
         height={LCD * SUPERSAMPLE}
         style={{ left: lcd.x, top: lcd.y, width: lcd.w, height: lcd.h, borderRadius: lcd.r }}
-        aria-label="Pantalla del FM-1"
+        aria-label="FM-1 screen"
       />
       <div className="glass" style={{ left: lcd.x, top: lcd.y, width: lcd.w, height: lcd.h, borderRadius: lcd.r }} />
     </>

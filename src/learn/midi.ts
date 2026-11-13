@@ -12,7 +12,7 @@ export function parseMidi(buf: ArrayBuffer): MidiTrack[] {
   const v = new DataView(buf)
   let p = 0
   const need = (n: number) => {
-    if (p + n > v.byteLength) throw new Error('El archivo se corta antes de tiempo')
+    if (p + n > v.byteLength) throw new Error('The file ends too early')
   }
   const u8 = () => (need(1), v.getUint8(p++))
   const u16 = () => (need(2), (p += 2), v.getUint16(p - 2))
@@ -28,7 +28,7 @@ export function parseMidi(buf: ArrayBuffer): MidiTrack[] {
     return n
   }
 
-  if (v.byteLength < 14 || tag() !== 'MThd') throw new Error('No es un archivo MIDI')
+  if (v.byteLength < 14 || tag() !== 'MThd') throw new Error('Not a MIDI file')
   const hlen = u32()
   u16() // formato
   const ntrks = u16()
@@ -113,7 +113,7 @@ export function parseMidi(buf: ArrayBuffer): MidiTrack[] {
 
   return raws
     .map((r, i) => ({
-      name: r.name || `Pista ${i + 1}`,
+      name: r.name || `Track ${i + 1}`,
       // el canal 10 es batería: no tiene notas que tocar
       notes: r.notes
         .filter((n) => n.ch !== 9)
@@ -198,32 +198,32 @@ export function lessonFromSong(song: Song): Lesson {
   const steps: Step[] = [
     {
       title: song.title,
-      body: `La convertí en ${phrases.length} ${phrases.length === 1 ? 'frase' : 'frases'} cortas. En cada una te ilumino la tecla que sigue${chords ? ' (o todas las del acorde)' : ''} y esperas a tocarla, sin prisa. Escúchala primero.`,
+      body: `I split it into ${phrases.length} short ${phrases.length === 1 ? 'phrase' : 'phrases'}. In each one I light up the next key${chords ? ' (or every key in the chord)' : ''} and wait for you to play it, no rush. Listen first.`,
       demo: momentsDemo(song.moments.slice(0, 32)),
     },
     ...phrases.map<Step>((ph, i) => ({
-      title: `Frase ${i + 1} de ${phrases.length}`,
-      body: i === 0 ? 'Escúchala y luego tócala. Si una nota no cabe en el teclado, el aro te señala OCT− u OCT+.' : 'Sigue igual: escucha y toca las teclas azules.',
-      task: 'Toca las teclas azules',
+      title: `Phrase ${i + 1} of ${phrases.length}`,
+      body: i === 0 ? 'Listen, then play it. If a note doesn’t fit on the keyboard, the ring points you to OCT− or OCT+.' : 'Same as before: listen and play the blue keys.',
+      task: 'Play the blue keys',
       follow: ph.map((m) => m.notes),
       demo: momentsDemo(ph),
     })),
   ]
   if (phrases.length > 1 && song.moments.length <= 64) {
     steps.push({
-      title: 'Toda junta',
-      body: 'Ahora de corrido. Escúchala otra vez si quieres.',
-      task: 'Toca las teclas azules',
+      title: 'All together',
+      body: 'Now straight through. Listen again if you like.',
+      task: 'Play the blue keys',
       follow: song.moments.map((m) => m.notes),
       demo: momentsDemo(song.moments),
     })
   }
   steps.push({
-    title: '¡La tocaste!',
-    body: 'Repítela las veces que quieras. Prueba otros presets: la misma canción cambia mucho con otro sonido.',
+    title: 'You played it!',
+    body: 'Play it as many times as you like. Try other presets: the same song changes a lot with another sound.',
   })
 
-  return { id: song.id, title: song.title, subtitle: `Importada de MIDI · ${song.moments.length} notas`, steps }
+  return { id: song.id, title: song.title, subtitle: `Imported from MIDI · ${song.moments.length} notes`, steps }
 }
 
 // ── Canciones importadas guardadas en el navegador ──────────────────────
