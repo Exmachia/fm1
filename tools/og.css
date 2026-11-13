@@ -42,7 +42,7 @@ body { background: radial-gradient(75% 85% at 50% 42%, #f1efea 0%, var(--bg) 55%
   color: var(--ink);
   z-index: 3;
 }
-.og-top { left: var(--x0); bottom: calc(630px - var(--y0) + 16px); }
-.og-bottom { right: calc(1200px - var(--x1)); top: calc(var(--y1) + 16px); color: var(--ink-soft); }
+.og-top { left: calc(var(--x0) + 18px); bottom: calc(630px - var(--y0) + 16px); }
+.og-bottom { right: calc(1200px - var(--x1) + 18px); top: calc(var(--y1) + 16px); color: var(--ink-soft); }
 
 .og .grain { position: absolute; inset: 0; }
