@@ -708,6 +708,9 @@ body {
 .panel > .tiles { width: auto; max-width: 100%; }
 .panel > .tiles .tiles-title { text-align: right; }
 .panel > .tiles .tiles-grid { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 158px; justify-content: end; }
+/* con una lección abierta, su tarjeta va abajo al centro (margin-top: auto no la recorta si no cabe) */
+.panel:has(> .coach) { padding-bottom: 12px; }
+.panel > .coach { margin-top: auto; }
 .tiles-title { margin: 0 0 8px; font: 800 13px var(--ui-font); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); text-align: center; }
 .tiles-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
 .tiles-grid li { position: relative; }
