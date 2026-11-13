@@ -102,18 +102,32 @@ async function fetchPackage(fw: Firmware): Promise<ArrayBuffer> {
 async function ensureAudio() {
   if (ctx && node) return
   // el emulador corre a 44.1 kHz, como el aparato
-  ctx = new AudioContext({ sampleRate: 44100, latencyHint: 'interactive' })
+  ctx ??= new AudioContext({ sampleRate: 44100, latencyHint: 'interactive' })
   await ctx.audioWorklet.addModule(`${import.meta.env.BASE_URL}emu/worklet.js`)
   node = new AudioWorkletNode(ctx, 'fm1', { numberOfInputs: 0, outputChannelCount: [2] })
   node.connect(ctx.destination)
   node.port.onmessage = onMessage
 }
 
+/** Si en este tiempo no arranca, algo se trabó. */
+const BOOT_TIMEOUT = 30000
+let bootTimer: ReturnType<typeof setTimeout> | undefined
+
+/** El error en palabras de aquí: qué pasó y qué hacer. */
+function explain(err: unknown) {
+  const msg = err instanceof Error ? err.message : String(err)
+  if (/failed to fetch|load failed|networkerror|unable to load|aborterror/i.test(msg) || (err instanceof DOMException && err.name === 'AbortError'))
+    return 'No se pudo descargar el emulador. Revisa tu conexión o recarga la página.'
+  return msg
+}
+
 function onMessage(e: MessageEvent) {
   const m = e.data as { type: string; seq?: number; lcd?: Uint16Array | null; leds?: Float32Array; message?: string; fatal?: boolean; playing?: boolean }
   if (m.seq !== undefined && m.seq !== seq) return
-  if (m.type === 'booted') useEmu.setState({ status: 'running' })
-  else if (m.type === 'frame') {
+  if (m.type === 'booted') {
+    clearTimeout(bootTimer)
+    useEmu.setState({ status: 'running' })
+  } else if (m.type === 'frame') {
     playing = !!m.playing
     if (m.lcd) {
       lcd = m.lcd
@@ -125,13 +139,16 @@ function onMessage(e: MessageEvent) {
       if (next.some((v, i) => v !== prev[i])) useEmu.setState({ leds: next })
     }
   } else if (m.type === 'error' && (m.fatal || useEmu.getState().status !== 'running')) {
-    useEmu.setState({ status: 'error', error: m.message ?? 'El firmware se detuvo' })
+    clearTimeout(bootTimer)
+    console.error('[fm1-emu]', m.message)
+    useEmu.setState({ status: 'error', error: m.message ? `El emulador dijo: ${m.message}` : 'El firmware se detuvo' })
   }
 }
 
 /** Arranca un firmware. Llamar desde un clic: el navegador solo deja sonar después de uno. */
 export async function startFirmware(fw: Firmware) {
   const my = ++seq
+  clearTimeout(bootTimer)
   lcd = null
   lcdVersion++
   useEmu.setState({ fw, status: 'loading', error: null, leds: OFF_LEDS, pressed: new Set() })
@@ -150,15 +167,22 @@ export async function startFirmware(fw: Firmware) {
     send({ type: 'boot', seq: my, wasm: bin.slice(0), package: pkg, mhz: 100, jit: true })
     // el MASTER del emulador arranca donde esté nuestra perilla
     send({ type: 'pot', value: Math.round(useEmu.getState().master * 1023) })
+    bootTimer = setTimeout(() => {
+      if (my !== seq || useEmu.getState().status !== 'booting') return
+      send({ type: 'cancel-boot', seq: my })
+      useEmu.setState({ status: 'error', error: 'Tardó demasiado en arrancar. Inténtalo otra vez.' })
+    }, BOOT_TIMEOUT)
   } catch (err) {
     if (my !== seq) return
-    useEmu.setState({ status: 'error', error: err instanceof Error ? err.message : String(err) })
+    console.error('[fm1-emu]', err)
+    useEmu.setState({ status: 'error', error: explain(err) })
   }
 }
 
 /** Regresa al FM-1 de fábrica (nuestro motor). */
 export function stopFirmware() {
   seq++
+  clearTimeout(bootTimer)
   send({ type: 'cancel-boot', seq })
   void ctx?.suspend()
   lcd = null

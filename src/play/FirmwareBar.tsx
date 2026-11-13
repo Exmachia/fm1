@@ -1,4 +1,4 @@
-import { stopFirmware, useEmu } from '../emu/emu'
+import { startFirmware, stopFirmware, useEmu } from '../emu/emu'
 
 const LABEL = { off: '', loading: 'Descargando…', booting: 'Arrancando…', running: 'Corriendo', error: 'No arrancó' }
 
@@ -16,6 +16,11 @@ export function FirmwareBar() {
         <b>{fw.name}</b>
         <span>{LABEL[status]}</span>
       </span>
+      {status === 'error' && (
+        <button type="button" className="export-btn" onClick={() => void startFirmware(fw)}>
+          Reintentar
+        </button>
+      )}
       <button type="button" className="export-btn" onClick={stopFirmware}>
         Volver al FM-1
       </button>
